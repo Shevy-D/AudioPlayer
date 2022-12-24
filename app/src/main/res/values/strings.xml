@@ -4,4 +4,16 @@
     <string name="favourites">Favourites</string>
     <string name="playlists">Playlists</string>
     <string name="total_songs">Total Songs</string>
+    <string name="world_of_music">World of Music</string>
+    <string name="back">Back</string>
+    <string name="song_name">Song Name</string>
+    <string name="start_tv">00:00</string>
+    <string name="end_tv">Loading..</string>
+    <string name="repeat">Repeat</string>
+    <string name="equalizer">Equalizer</string>
+    <string name="timer">Timer</string>
+    <string name="share">Share</string>
+    <string name="volume">Volume</string>
+    <string name="favourite_note">Tip: Play Music And Click On &#10084; To Add It Into Favourites. </string>
+    <string name="playlist_note">Tip: Click On ➕ To Create New Playlist. </string>
 </resources>

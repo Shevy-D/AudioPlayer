@@ -4,11 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/btn_bg.xml" value="0.1" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/ic_exit_icon.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/ic_launcher_background.xml" value="0.239" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/ic_play.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/ic_playlist_icon.xml" value="0.1" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/ic_previous.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/drawable/splash_screen.xml" value="0.1" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/layout/activity_favorite.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/layout/activity_player.xml" value="0.18055555555555555" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/AudioPlayer/app/src/main/res/layout/activity_playlist.xml" value="0.2" />
       </map>
     </option>
   </component>
