@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shevy.audioplayer.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var musicAdapter: MusicAdapter
 
     lateinit var runnable: Runnable
     private var handler = Handler()
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         binding.root.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        initializeLayout()
 
         binding.shuffleBtn.setOnClickListener {
             startActivity(Intent(this@MainActivity, PlayerActivity::class.java))
@@ -135,5 +139,34 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initializeLayout(){
+        val musicList = ArrayList<String>()
+        musicList.add("1 song")
+        musicList.add("2 song")
+        musicList.add("3 song")
+        musicList.add("4 song")
+        musicList.add("5 song")
+        binding.musicRV.setHasFixedSize(true)
+        binding.musicRV.setItemViewCacheSize(13)
+        binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        musicAdapter = MusicAdapter(this@MainActivity, musicList)
+        binding.musicRV.adapter = musicAdapter
+        binding.totalSongs.text = "Total Songs: ${musicAdapter.itemCount}"
+/*        search = false
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        sortOrder = sortEditor.getInt("sortOrder", 0)
+        MusicListMA = getAllAudio()
+
+        binding.totalSongs.text  = "Total Songs : "+musicAdapter.itemCount
+
+        //for refreshing layout on swipe from top
+        binding.refreshLayout.setOnRefreshListener {
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+
+            binding.refreshLayout.isRefreshing = false
+        }*/
     }
 }
