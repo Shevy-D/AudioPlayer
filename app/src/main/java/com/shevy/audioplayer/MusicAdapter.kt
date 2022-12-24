@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.shevy.audioplayer.databinding.MusicViewBinding
+import com.shevy.audioplayer.model.Music
 
 class MusicAdapter(
     private val context: Context,
-    private var musicList: ArrayList<String>/*,
+    private var musicList: ArrayList<Music>/*,
     private val playlistDetails: Boolean = false,
     private val selectionActivity: Boolean = false*/
 ) : RecyclerView.Adapter<MusicAdapter.MyHolder>() {
@@ -26,10 +27,13 @@ class MusicAdapter(
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.title.text = musicList[position] //.title
+        holder.title.text = musicList[position].title
+        holder.album.text = musicList[position].album
+        //holder.duration.text = formatDuration(musicList[position].duration)
+        holder.duration.text = musicList[position].duration.toString()
 
-/*        holder.album.text = musicList[position].album
-        holder.duration.text = formatDuration(musicList[position].duration)
+/*
+
         Glide.with(context)
             .load(musicList[position].artUri)
             .apply(RequestOptions().placeholder(R.drawable.splash_screen).centerCrop())
