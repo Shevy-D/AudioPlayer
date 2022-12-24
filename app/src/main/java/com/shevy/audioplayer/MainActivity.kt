@@ -1,13 +1,20 @@
 package com.shevy.audioplayer
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.shevy.audioplayer.databinding.ActivityMainBinding
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private lateinit var toggle: ActionBarDrawerToggle
 
     lateinit var runnable: Runnable
     private var handler = Handler()
@@ -16,8 +23,14 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_AudioPlayer)
 
         super.onCreate(savedInstanceState)
+        requestRuntimePermission()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
+        binding.root.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.shuffleBtn.setOnClickListener {
             startActivity(Intent(this@MainActivity, PlayerActivity::class.java))
@@ -29,6 +42,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.playlistBtn.setOnClickListener {
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
+        }
+
+        binding.navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navFeedback -> Toast.makeText(baseContext, "Feedback", Toast.LENGTH_SHORT).show()
+                R.id.navSettings -> Toast.makeText(baseContext, "Setting", Toast.LENGTH_SHORT).show()
+                R.id.navAbout -> Toast.makeText(baseContext, "About", Toast.LENGTH_SHORT).show()
+                R.id.navExit -> exitProcess(1)
+            }
+            true
         }
 
         /*       val mediaPlayer: MediaPlayer = MediaPlayer.create(this, R.raw.music)
@@ -71,5 +94,46 @@ class MainActivity : AppCompatActivity() {
                    binding.playBtn.setImageResource(R.drawable.ic_play)
                    seekBar.progress = 0
                }*/
+    }
+
+    private fun requestRuntimePermission(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                13
+            )
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 13) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+                //initializeLayout()
+            } else
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    13
+                )
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) return true
+        return super.onOptionsItemSelected(item)
     }
 }
