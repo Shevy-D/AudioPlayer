@@ -3,6 +3,7 @@ package com.shevy.audioplayer
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
@@ -162,9 +163,7 @@ class MainActivity : AppCompatActivity() {
 /*        search = false
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
         sortOrder = sortEditor.getInt("sortOrder", 0)
-        MusicListMA = getAllAudio()
 
-        binding.totalSongs.text  = "Total Songs : "+musicAdapter.itemCount
 
         //for refreshing layout on swipe from top
         binding.refreshLayout.setOnRefreshListener {
@@ -210,6 +209,9 @@ class MainActivity : AppCompatActivity() {
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                     val durationC =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                    val albumIdC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
 
                     val music = Music(
                         id = idC,
@@ -217,7 +219,8 @@ class MainActivity : AppCompatActivity() {
                         album = albumC,
                         artist = artistC,
                         path = pathC,
-                        duration = durationC
+                        duration = durationC,
+                        artUri = artUriC
                     )
                     val file = File(music.path)
                     if (file.exists())
