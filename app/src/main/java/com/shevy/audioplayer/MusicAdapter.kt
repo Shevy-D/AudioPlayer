@@ -42,6 +42,8 @@ class MusicAdapter(
 
         holder.root.setOnClickListener {
             val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra("index", position)
+            intent.putExtra("class", "MusicAdapter")
             ContextCompat.startActivity(context, intent, null)
         }
 
