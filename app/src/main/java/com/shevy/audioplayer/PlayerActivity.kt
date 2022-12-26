@@ -38,33 +38,17 @@ class PlayerActivity : AppCompatActivity() {
         binding.playPauseBtnPA.setOnClickListener {
             if (isPlaying) pauseMusic() else playMusic()
         }
+
+        binding.previousBtnPA.setOnClickListener { prevNextSong(increment = false) }
+        binding.nextBtnPA.setOnClickListener { prevNextSong(increment = true) }
     }
 
     private fun setLayout() {
-        //fIndex = favouriteChecker(musicListPA[songPosition].id)
         Glide.with(applicationContext)
             .load(musicListPA[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.splash_screen).centerCrop())
             .into(binding.songImgPA)
         binding.songNamePA.text = musicListPA[songPosition].title
-//        if(repeat) binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(applicationContext, R.color.purple_500))
-//        if(min15 || min30 || min60) binding.timerBtnPA.setColorFilter(ContextCompat.getColor(applicationContext, R.color.purple_500))
-//        if(isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
-//        else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-//
-//        val img = getImgArt(musicListPA[songPosition].path)
-//        val image = if (img != null) {
-//            BitmapFactory.decodeByteArray(img, 0, img.size)
-//        } else {
-//            BitmapFactory.decodeResource(
-//                resources,
-//                R.drawable.music_player_icon_slash_screen
-//            )
-//        }
-//        val bgColor = getMainColor(image)
-//        val gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xFFFFFF, bgColor))
-//        binding.root.background = gradient
-//        window?.statusBarColor = bgColor
     }
 
     private fun createMediaPlayer() {
@@ -103,5 +87,29 @@ class PlayerActivity : AppCompatActivity() {
         binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
         isPlaying = false
         mediaPlayer!!.pause()
+    }
+
+    private fun prevNextSong(increment: Boolean) {
+        if (increment) {
+            setSongPosition(increment = true)
+            setLayout()
+            createMediaPlayer()
+        } else {
+            setSongPosition(increment = false)
+            setLayout()
+            createMediaPlayer()
+        }
+    }
+
+    private fun setSongPosition(increment: Boolean) {
+        if (increment) {
+            if (musicListPA.size - 1 == songPosition)
+                songPosition = 0
+            else ++songPosition
+        } else {
+            if (0 == songPosition)
+                songPosition = musicListPA.size - 1
+            else --songPosition
+        }
     }
 }
