@@ -1,4 +1,4 @@
-package com.shevy.audioplayer.model
+package com.shevy.audioplayer.models
 
 import java.util.concurrent.TimeUnit
 

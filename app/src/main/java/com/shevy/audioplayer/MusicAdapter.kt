@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shevy.audioplayer.databinding.MusicViewBinding
-import com.shevy.audioplayer.model.Music
-import com.shevy.audioplayer.model.formatDuration
+import com.shevy.audioplayer.models.Music
+import com.shevy.audioplayer.models.formatDuration
+import com.shevy.audioplayer.presentation.PlayerActivity
 
 class MusicAdapter(
     private val context: Context,

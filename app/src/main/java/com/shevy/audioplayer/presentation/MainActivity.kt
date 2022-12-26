@@ -1,11 +1,10 @@
-package com.shevy.audioplayer
+package com.shevy.audioplayer.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,8 +12,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.shevy.audioplayer.MusicAdapter
+import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityMainBinding
-import com.shevy.audioplayer.model.Music
+import com.shevy.audioplayer.models.Music
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -27,14 +28,10 @@ class MainActivity : AppCompatActivity() {
         lateinit var MusicListMA: ArrayList<Music>
     }
 
-    lateinit var runnable: Runnable
-    private var handler = Handler()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AudioPlayer)
 
         super.onCreate(savedInstanceState)
-        requestRuntimePermission()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -43,10 +40,14 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        initializeLayout()
+        if (requestRuntimePermission())
+            initializeLayout()
 
         binding.shuffleBtn.setOnClickListener {
-            startActivity(Intent(this@MainActivity, PlayerActivity::class.java))
+            val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "MainActivity")
+            startActivity(intent)
         }
 
         binding.favouriteBtn.setOnClickListener {
@@ -68,47 +69,6 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        /*       val mediaPlayer: MediaPlayer = MediaPlayer.create(this, R.raw.music)
-
-               val seekBar = binding.seekBar
-               seekBar.progress = 0
-               seekBar.max = mediaPlayer.duration
-
-               binding.playBtn.setOnClickListener {
-                   if (!mediaPlayer.isPlaying) {
-                       mediaPlayer.start()
-                       binding.playBtn.setImageResource(R.drawable.ic_pause)
-                   } else {
-                       mediaPlayer.pause()
-                       binding.playBtn.setImageResource(R.drawable.ic_play)
-                   }
-               }
-
-               seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-                   override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
-                       if (changed) {
-                           mediaPlayer.seekTo(pos)
-                       }
-                   }
-
-                   override fun onStartTrackingTouch(p0: SeekBar?) {
-                   }
-
-                   override fun onStopTrackingTouch(p0: SeekBar?) {
-                   }
-               })
-
-               runnable = Runnable {
-                   seekBar.progress = mediaPlayer.currentPosition
-                   handler.postDelayed(runnable, 1000)
-               }
-               handler.postDelayed(runnable, 1000)
-
-               mediaPlayer.setOnCompletionListener {
-                   binding.playBtn.setImageResource(R.drawable.ic_play)
-                   seekBar.progress = 0
-               }*/
     }
 
     private fun requestRuntimePermission(): Boolean {
@@ -137,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 13) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                //initializeLayout()
+                initializeLayout()
             } else
                 ActivityCompat.requestPermissions(
                     this,
@@ -160,18 +120,6 @@ class MainActivity : AppCompatActivity() {
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         binding.musicRV.adapter = musicAdapter
         binding.totalSongs.text = "Total Songs: ${musicAdapter.itemCount}"
-/*        search = false
-        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
-        sortOrder = sortEditor.getInt("sortOrder", 0)
-
-
-        //for refreshing layout on swipe from top
-        binding.refreshLayout.setOnRefreshListener {
-            MusicListMA = getAllAudio()
-            musicAdapter.updateMusicList(MusicListMA)
-
-            binding.refreshLayout.isRefreshing = false
-        }*/
     }
 
     @SuppressLint("Range")
@@ -209,7 +157,9 @@ class MainActivity : AppCompatActivity() {
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                     val durationC =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
-                    val albumIdC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
+                    val albumIdC =
+                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+                            .toString()
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
 
@@ -228,27 +178,6 @@ class MainActivity : AppCompatActivity() {
                 } while (cursor.moveToNext())
             cursor.close()
         }
-        /*
-        if(cursor != null){
-            if(cursor.moveToFirst())
-                do {
-                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))?:"Unknown"
-                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))?:"Unknown"
-                    val albumC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))?:"Unknown"
-                    val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))?:"Unknown"
-                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-                    val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
-                    val albumIdC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
-                    val music = Music(id = idC, title = titleC, album = albumC, artist = artistC, path = pathC, duration = durationC,
-                        artUri = artUriC)
-                    val file = File(music.path)
-                    if(file.exists())
-                        tempList.add(music)
-                }while (cursor.moveToNext())
-            cursor.close()
-        }*/
         return tempList
     }
 }
