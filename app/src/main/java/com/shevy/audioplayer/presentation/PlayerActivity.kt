@@ -1,5 +1,6 @@
 package com.shevy.audioplayer.presentation
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -13,6 +14,7 @@ import com.shevy.audioplayer.MusicService
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlayerBinding
 import com.shevy.audioplayer.models.Music
+import com.shevy.audioplayer.models.setSongPosition
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
@@ -20,21 +22,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
 
-        //var mediaPlayer: MediaPlayer? = null
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
-        /*
-        var repeat: Boolean = false
-        var min15: Boolean = false
-        var min30: Boolean = false
-        var min60: Boolean = false
-        var nowPlayingId: String = ""
-        var isFavourite: Boolean = false
-        var fIndex: Int = -1
-        lateinit var loudnessEnhancer: LoudnessEnhancer*/
-    }
 
-    lateinit var binding: ActivityPlayerBinding
+        @SuppressLint("StaticFieldLeak")
+        lateinit var binding: ActivityPlayerBinding
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +64,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
             musicService!!.mediaPlayer!!.start()
             isPlaying = true
             binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
+            musicService!!.showNotification(R.drawable.ic_pause)
         } catch (e: Exception) {
             return
         }
@@ -95,12 +89,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
     private fun playMusic() {
         binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
+        musicService!!.showNotification(R.drawable.ic_pause)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
+        musicService!!.showNotification(R.drawable.ic_play)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
     }
@@ -117,23 +113,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         }
     }
 
-    private fun setSongPosition(increment: Boolean) {
-        if (increment) {
-            if (musicListPA.size - 1 == songPosition)
-                songPosition = 0
-            else ++songPosition
-        } else {
-            if (0 == songPosition)
-                songPosition = musicListPA.size - 1
-            else --songPosition
-        }
-    }
-
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer()
-        musicService!!.showNotification()
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
