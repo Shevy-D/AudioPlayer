@@ -12,5 +12,7 @@ class PlaylistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.backBtnPLA.setOnClickListener { finish() }
     }
 }

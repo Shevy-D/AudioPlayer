@@ -44,6 +44,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         startService(intentService)
 
         initializeLayout()
+        binding.backBtnPA.setOnClickListener { finish() }
         binding.playPauseBtnPA.setOnClickListener {
             if (isPlaying) pauseMusic() else playMusic()
         }
