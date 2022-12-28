@@ -188,18 +188,6 @@
             android:src="@drawable/ic_share"
             app:tint="@color/cool_pink" />
 
-
-        <!--       Volume Button-->
-        <!--        <ImageButton
-                    android:id="@+id/boosterBtnPA"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:contentDescription="@string/volume"
-                    android:src="@drawable/volume_icon"
-                    app:tint="@color/cool_pink" />-->
-
     </LinearLayout>
 
 </LinearLayout>
