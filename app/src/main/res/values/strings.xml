@@ -28,4 +28,6 @@
     <string name="icon">Icon</string>
     <string name="text_nav">Welcome to\nWorld of Music</string>
     <string name="search_view">Search View</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

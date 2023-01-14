@@ -27,6 +27,7 @@ class NotificationReceiver : BroadcastReceiver() {
         PlayerActivity.musicService!!.mediaPlayer!!.start()
         PlayerActivity.musicService!!.showNotification(R.drawable.ic_pause)
         PlayerActivity.binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
+        NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.ic_pause)
     }
 
     private fun pauseMusic() {
@@ -34,6 +35,7 @@ class NotificationReceiver : BroadcastReceiver() {
         PlayerActivity.musicService!!.mediaPlayer!!.pause()
         PlayerActivity.musicService!!.showNotification(R.drawable.ic_play)
         PlayerActivity.binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
+        NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.ic_play)
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
@@ -45,6 +47,11 @@ class NotificationReceiver : BroadcastReceiver() {
             .into(PlayerActivity.binding.songImgPA)
         PlayerActivity.binding.songNamePA.text =
             PlayerActivity.musicListPA[PlayerActivity.songPosition].title
+        Glide.with(context)
+            .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].artUri)
+            .apply(RequestOptions().placeholder(R.drawable.splash_screen).centerCrop())
+            .into(NowPlaying.binding.songImgNP)
+        NowPlaying.binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
         playMusic()
     }
 }
