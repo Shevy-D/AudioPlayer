@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.shevy.audioplayer.databinding.MusicViewBinding
 import com.shevy.audioplayer.models.Music
 import com.shevy.audioplayer.models.formatDuration
+import com.shevy.audioplayer.presentation.MainActivity
 import com.shevy.audioplayer.presentation.PlayerActivity
 
 class MusicAdapter(
@@ -42,10 +43,10 @@ class MusicAdapter(
             .into(holder.image)
 
         holder.root.setOnClickListener {
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("index", position)
-            intent.putExtra("class", "MusicAdapter")
-            ContextCompat.startActivity(context, intent, null)
+            when {
+                MainActivity.search -> sendIntent(ref = "MusicAdapterSearch", pos = position)
+                else -> sendIntent(ref = "MusicAdapter", pos = position)
+            }
         }
 
 /*
@@ -150,13 +151,20 @@ class MusicAdapter(
         return musicList.size
     }
 
-/*    fun updateMusicList(searchList: ArrayList<Music>) {
+    fun updateMusicList(searchList: ArrayList<Music>) {
         musicList = ArrayList()
         musicList.addAll(searchList)
         notifyDataSetChanged()
     }
 
     private fun sendIntent(ref: String, pos: Int) {
+        val intent = Intent(context, PlayerActivity::class.java)
+        intent.putExtra("index", pos)
+        intent.putExtra("class", ref)
+        ContextCompat.startActivity(context, intent, null)
+    }
+
+/*  private fun sendIntent(ref: String, pos: Int) {
         val intent = Intent(context, PlayerActivity::class.java)
         intent.putExtra("index", pos)
         intent.putExtra("class", ref)

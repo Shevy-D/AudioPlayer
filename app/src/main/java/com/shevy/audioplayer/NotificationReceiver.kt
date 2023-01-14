@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.shevy.audioplayer.models.exitApplication
 import com.shevy.audioplayer.models.setSongPosition
 import com.shevy.audioplayer.presentation.PlayerActivity
-import kotlin.system.exitProcess
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -17,10 +17,7 @@ class NotificationReceiver : BroadcastReceiver() {
             ApplicationClass.PLAY -> if (PlayerActivity.isPlaying) pauseMusic() else playMusic()
             ApplicationClass.NEXT -> prevNextSong(increment = true, context = context!!)
             ApplicationClass.EXIT -> {
-                PlayerActivity.musicService!!.stopForeground(true)
-                PlayerActivity.musicService!!.mediaPlayer!!.release()
-                PlayerActivity.musicService = null
-                exitProcess(1)
+                exitApplication()
             }
         }
     }

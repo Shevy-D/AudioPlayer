@@ -3,6 +3,7 @@ package com.shevy.audioplayer.models
 import android.media.MediaMetadataRetriever
 import com.shevy.audioplayer.presentation.PlayerActivity
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 data class Music(
     val id: String,
@@ -39,4 +40,13 @@ fun setSongPosition(increment: Boolean) {
             else --PlayerActivity.songPosition
         }
     }
+}
+
+fun exitApplication(){
+    if (PlayerActivity.musicService != null) {
+        PlayerActivity.musicService!!.stopForeground(true)
+        PlayerActivity.musicService!!.mediaPlayer!!.release()
+        PlayerActivity.musicService = null
+    }
+    exitProcess(1)
 }

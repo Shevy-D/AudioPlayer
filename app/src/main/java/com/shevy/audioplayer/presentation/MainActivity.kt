@@ -7,7 +7,9 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -19,8 +21,8 @@ import com.shevy.audioplayer.MusicAdapter
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityMainBinding
 import com.shevy.audioplayer.models.Music
+import com.shevy.audioplayer.models.exitApplication
 import java.io.File
-import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var MusicListMA: ArrayList<Music>
+        lateinit var musicListSearch: ArrayList<Music>
+        var search: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,12 +77,7 @@ class MainActivity : AppCompatActivity() {
                     builder.setTitle("Exit")
                         .setMessage("Do you want to close app?")
                         .setPositiveButton("Yes") { _, _ ->
-                            if (PlayerActivity.musicService != null) {
-                                PlayerActivity.musicService!!.stopForeground(true)
-                                PlayerActivity.musicService!!.mediaPlayer!!.release()
-                                PlayerActivity.musicService = null
-                            }
-                            exitProcess(1)
+                            exitApplication()
                         }
                         .setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()
@@ -135,6 +134,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeLayout() {
+        search = false
         MusicListMA = getAllAudio()
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
@@ -206,10 +206,30 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
-            PlayerActivity.musicService!!.stopForeground(true)
-            PlayerActivity.musicService!!.mediaPlayer!!.release()
-            PlayerActivity.musicService = null
-            exitProcess(1)
+            exitApplication()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_view_menu, menu)
+        val searchView = menu?.findItem(R.id.searchView)?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+            override fun onQueryTextChange(p0: String?): Boolean {
+                musicListSearch = ArrayList()
+                if (p0 != null) {
+                    val userInput = p0.lowercase()
+                    for (song in MusicListMA)
+                        if (song.title.lowercase().contains(userInput))
+                            musicListSearch.add(song)
+                    search = true
+                    musicAdapter.updateMusicList(musicListSearch)
+                }
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 }
