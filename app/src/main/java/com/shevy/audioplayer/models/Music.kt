@@ -2,6 +2,7 @@ package com.shevy.audioplayer.models
 
 import android.media.MediaMetadataRetriever
 import com.shevy.audioplayer.presentation.PlayerActivity
+import com.shevy.audioplayer.presentation.favorite.FavoriteActivity
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
@@ -42,11 +43,22 @@ fun setSongPosition(increment: Boolean) {
     }
 }
 
-fun exitApplication(){
+fun exitApplication() {
     if (PlayerActivity.musicService != null) {
         PlayerActivity.musicService!!.stopForeground(true)
         PlayerActivity.musicService!!.mediaPlayer!!.release()
         PlayerActivity.musicService = null
     }
     exitProcess(1)
+}
+
+fun favouriteChecker(id: String): Int {
+    PlayerActivity.isFavorite = false
+    FavoriteActivity.favoriteSongs.forEachIndexed { index, music ->
+        if (id == music.id) {
+            PlayerActivity.isFavorite = true
+            return index
+        }
+    }
+    return -1
 }

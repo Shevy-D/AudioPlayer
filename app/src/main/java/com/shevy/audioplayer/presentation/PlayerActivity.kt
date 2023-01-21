@@ -23,10 +23,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shevy.audioplayer.MusicService
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlayerBinding
-import com.shevy.audioplayer.models.Music
-import com.shevy.audioplayer.models.exitApplication
-import com.shevy.audioplayer.models.formatDuration
-import com.shevy.audioplayer.models.setSongPosition
+import com.shevy.audioplayer.models.*
+import com.shevy.audioplayer.presentation.favorite.FavoriteActivity
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
@@ -45,6 +43,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var min30: Boolean = false
         var min60: Boolean = false
         var nowPlayingId: String = ""
+        var isFavorite: Boolean = false
+        var fIndex: Int = -1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,9 +131,22 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].path))
             startActivity(Intent.createChooser(shareIntent, "Sharing Music File!"))
         }
+
+        binding.favouriteBtnPA.setOnClickListener {
+            if (isFavorite) {
+                isFavorite = false
+                binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_empty)
+                FavoriteActivity.favoriteSongs.removeAt(fIndex)
+            } else {
+                isFavorite = true
+                binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_icon)
+                FavoriteActivity.favoriteSongs.add(musicListPA[songPosition])
+            }
+        }
     }
 
     private fun setLayout() {
+        fIndex = favouriteChecker(musicListPA[songPosition].id)
         Glide.with(applicationContext)
             .load(musicListPA[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.splash_screen).centerCrop())
@@ -152,6 +165,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 R.color.purple_500
             )
         )
+
+        if (isFavorite) binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_icon)
+        else binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_empty)
     }
 
     private fun createMediaPlayer() {
@@ -182,11 +198,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         when (intent.getStringExtra("class")) {
             "NowPlaying" -> {
                 setLayout()
-                binding.tvSeekBarStart.text = formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.tvSeekBarEnd.text = formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                binding.tvSeekBarStart.text =
+                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                binding.tvSeekBarEnd.text =
+                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-                if(isPlaying) binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
+                if (isPlaying) binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
                 else binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
             }
             "MusicAdapterSearch" -> {
