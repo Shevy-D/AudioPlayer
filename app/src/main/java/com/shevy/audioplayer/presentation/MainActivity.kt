@@ -25,6 +25,7 @@ import com.shevy.audioplayer.databinding.ActivityMainBinding
 import com.shevy.audioplayer.models.Music
 import com.shevy.audioplayer.models.exitApplication
 import com.shevy.audioplayer.presentation.favorite.FavoriteActivity
+import com.shevy.audioplayer.presentation.playlist.PlaylistActivity
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
