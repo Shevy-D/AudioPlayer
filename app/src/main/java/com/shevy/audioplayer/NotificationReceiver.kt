@@ -6,6 +6,7 @@ import android.content.Intent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shevy.audioplayer.models.exitApplication
+import com.shevy.audioplayer.models.favouriteChecker
 import com.shevy.audioplayer.models.setSongPosition
 import com.shevy.audioplayer.presentation.PlayerActivity
 
@@ -53,5 +54,8 @@ class NotificationReceiver : BroadcastReceiver() {
             .into(NowPlaying.binding.songImgNP)
         NowPlaying.binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
         playMusic()
+        PlayerActivity.fIndex = favouriteChecker(PlayerActivity.musicListPA[PlayerActivity.songPosition].id)
+        if (PlayerActivity.isFavorite) PlayerActivity.binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_icon)
+        else PlayerActivity.binding.favouriteBtnPA.setImageResource(R.drawable.ic_favorite_empty)
     }
 }
