@@ -21,6 +21,11 @@
         android:theme="@style/Theme.AudioPlayer"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.PlaylistDetails"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".presentation.playlist.PlaylistActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -49,6 +54,7 @@
         </activity>
 
         <service android:name=".MusicService" />
+
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true" />
