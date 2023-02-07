@@ -25,6 +25,7 @@ import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlayerBinding
 import com.shevy.audioplayer.models.*
 import com.shevy.audioplayer.presentation.favorite.FavoriteActivity
+import com.shevy.audioplayer.presentation.playlist.PlaylistActivity
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
@@ -246,6 +247,23 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 startService(intentService)
                 musicListPA = ArrayList()
                 musicListPA.addAll(FavoriteActivity.favoriteSongs)
+                musicListPA.shuffle()
+                setLayout()
+            }
+            "PlaylistDetailsAdapter" -> {
+                val intentService = Intent(this, MusicService::class.java)
+                bindService(intentService, this, BIND_AUTO_CREATE)
+                startService(intentService)
+                musicListPA = ArrayList()
+                musicListPA.addAll(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist)
+                setLayout()
+            }
+            "PlaylistDetailShuffle" -> {
+                val intentService = Intent(this, MusicService::class.java)
+                bindService(intentService, this, BIND_AUTO_CREATE)
+                startService(intentService)
+                musicListPA = ArrayList()
+                musicListPA.addAll(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist)
                 musicListPA.shuffle()
                 setLayout()
             }

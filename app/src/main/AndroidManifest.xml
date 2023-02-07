@@ -21,6 +21,11 @@
         android:theme="@style/Theme.AudioPlayer"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.SelectionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".presentation.PlaylistDetails"
             android:exported="false"
             android:screenOrientation="portrait"

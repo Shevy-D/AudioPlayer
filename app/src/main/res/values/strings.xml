@@ -34,4 +34,7 @@
     <string name="playlist_name">Playlist Name</string>
     <string name="delete">Delete</string>
     <string name="your_name">Your Name</string>
+    <string name="add_song">Add</string>
+    <string name="remove_all">Remove All</string>
+    <string name="search_song">Search Song</string>
 </resources>

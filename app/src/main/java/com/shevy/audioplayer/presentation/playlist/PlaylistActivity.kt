@@ -53,7 +53,7 @@ class PlaylistActivity : AppCompatActivity() {
                         addPlaylist(playlistName.toString(), createdBy.toString())
                     }
                 dialog.dismiss()
-            }//.create()
+            }
         dialog.show()
     }
 
