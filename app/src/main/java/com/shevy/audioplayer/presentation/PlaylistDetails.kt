@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shevy.audioplayer.MusicAdapter
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlaylistDetailsBinding
@@ -27,8 +28,6 @@ class PlaylistDetails : AppCompatActivity() {
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         currentPlaylistPos = intent.extras?.get("index") as Int
-        PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.addAll(MainActivity.MusicListMA)
-        PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.shuffle()
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this@PlaylistDetails)
@@ -48,6 +47,21 @@ class PlaylistDetails : AppCompatActivity() {
         binding.addBtnPD.setOnClickListener {
             startActivity(Intent(this, SelectionActivity::class.java))
         }
+        binding.removeAllPD.setOnClickListener {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder.setTitle("Remove")
+                .setMessage("Do you want to remove all songs from playlist?")
+                .setPositiveButton("Yes"){ dialog, _ ->
+                    PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.clear()
+                    adapterRV.refreshPlaylist()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("No"){dialog, _ ->
+                    dialog.dismiss()
+                }
+            val customDialog = builder.create()
+            customDialog.show()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -64,5 +78,6 @@ class PlaylistDetails : AppCompatActivity() {
                 .into(binding.playlistImgPD)
             binding.shuffleBtnPD.visibility = View.VISIBLE
         }
+        adapterRV.notifyDataSetChanged()
     }
 }
