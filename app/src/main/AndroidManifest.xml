@@ -21,6 +21,15 @@
         android:theme="@style/Theme.AudioPlayer"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.FeedbackActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.SelectionActivity"
             android:exported="false"
             android:screenOrientation="portrait"
