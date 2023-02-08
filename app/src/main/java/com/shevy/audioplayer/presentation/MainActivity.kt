@@ -23,6 +23,7 @@ import com.shevy.audioplayer.MusicAdapter
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityMainBinding
 import com.shevy.audioplayer.models.Music
+import com.shevy.audioplayer.models.MusicPlaylist
 import com.shevy.audioplayer.models.exitApplication
 import com.shevy.audioplayer.presentation.favorite.FavoriteActivity
 import com.shevy.audioplayer.presentation.playlist.PlaylistActivity
@@ -62,6 +63,14 @@ class MainActivity : AppCompatActivity() {
             if (jsonString != null) {
                 val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
                 FavoriteActivity.favoriteSongs.addAll(data)
+            }
+
+            PlaylistActivity.musicPlaylist = MusicPlaylist()
+            val jsonStringPlaylist = editor.getString("MusicPlaylist", null)
+
+            if (jsonStringPlaylist != null) {
+                val dataPlaylist: MusicPlaylist = GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlaylist::class.java)
+                PlaylistActivity.musicPlaylist = dataPlaylist
             }
         }
 
@@ -231,6 +240,8 @@ class MainActivity : AppCompatActivity() {
         val editor = getSharedPreferences("FAVORITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavoriteActivity.favoriteSongs)
         editor.putString("FavoriteSongs", jsonString)
+        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistActivity.musicPlaylist)
+        editor.putString("MusicPlaylist", jsonStringPlaylist)
         editor.apply()
     }
 

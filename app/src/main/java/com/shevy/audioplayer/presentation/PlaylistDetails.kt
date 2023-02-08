@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.GsonBuilder
 import com.shevy.audioplayer.MusicAdapter
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlaylistDetailsBinding
@@ -79,5 +80,10 @@ class PlaylistDetails : AppCompatActivity() {
             binding.shuffleBtnPD.visibility = View.VISIBLE
         }
         adapterRV.notifyDataSetChanged()
+
+        val editor = getSharedPreferences("FAVORITES", MODE_PRIVATE).edit()
+        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistActivity.musicPlaylist)
+        editor.putString("MusicPlaylist", jsonStringPlaylist)
+        editor.apply()
     }
 }
