@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder
 import com.shevy.audioplayer.MusicAdapter
 import com.shevy.audioplayer.R
 import com.shevy.audioplayer.databinding.ActivityPlaylistDetailsBinding
+import com.shevy.audioplayer.models.checkPlaylist
 import com.shevy.audioplayer.presentation.playlist.PlaylistActivity
 
 class PlaylistDetails : AppCompatActivity() {
@@ -29,6 +30,8 @@ class PlaylistDetails : AppCompatActivity() {
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         currentPlaylistPos = intent.extras?.get("index") as Int
+        PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist =
+            checkPlaylist(playlist = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist)
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this@PlaylistDetails)
@@ -52,12 +55,12 @@ class PlaylistDetails : AppCompatActivity() {
             val builder = MaterialAlertDialogBuilder(this)
             builder.setTitle("Remove")
                 .setMessage("Do you want to remove all songs from playlist?")
-                .setPositiveButton("Yes"){ dialog, _ ->
+                .setPositiveButton("Yes") { dialog, _ ->
                     PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.clear()
                     adapterRV.refreshPlaylist()
                     dialog.dismiss()
                 }
-                .setNegativeButton("No"){dialog, _ ->
+                .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()
                 }
             val customDialog = builder.create()

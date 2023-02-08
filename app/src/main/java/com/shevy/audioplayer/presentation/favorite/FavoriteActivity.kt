@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shevy.audioplayer.databinding.ActivityFavoriteBinding
 import com.shevy.audioplayer.models.Music
+import com.shevy.audioplayer.models.checkPlaylist
 import com.shevy.audioplayer.presentation.PlayerActivity
 
 class FavoriteActivity : AppCompatActivity() {
@@ -21,6 +22,8 @@ class FavoriteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        favoriteSongs = checkPlaylist(favoriteSongs)
 
         binding.backBtnFA.setOnClickListener { finish() }
 
