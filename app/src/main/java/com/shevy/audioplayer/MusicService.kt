@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -17,12 +18,13 @@ import com.shevy.audioplayer.models.getImgArt
 import com.shevy.audioplayer.presentation.MainActivity
 import com.shevy.audioplayer.presentation.PlayerActivity
 
-class MusicService : Service() {
+class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
+    lateinit var audioManager: AudioManager
 
     override fun onBind(p0: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -136,5 +138,24 @@ class MusicService : Service() {
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        if (focusChange <= 0) {
+            //pause music
+            PlayerActivity.binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
+            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.ic_play)
+            showNotification(R.drawable.ic_play)
+            PlayerActivity.isPlaying = false
+            mediaPlayer!!.pause()
+
+        } else {
+            //play music
+            PlayerActivity.binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
+            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.ic_pause)
+            showNotification(R.drawable.ic_pause)
+            PlayerActivity.isPlaying = true
+            mediaPlayer!!.start()
+        }
     }
 }
