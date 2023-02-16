@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.shevy.audioplayer.databinding.ActivityFavoriteBinding
 import com.shevy.audioplayer.models.Music
 import com.shevy.audioplayer.models.checkPlaylist
+import com.shevy.audioplayer.presentation.MainActivity
 import com.shevy.audioplayer.presentation.PlayerActivity
 
 class FavoriteActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class FavoriteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex])
         binding = ActivityFavoriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

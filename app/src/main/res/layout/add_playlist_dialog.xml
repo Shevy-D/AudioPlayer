@@ -8,11 +8,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/cool_pink"
+        app:boxStrokeColor="?attr/color"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="10dp"
         app:startIconDrawable="@drawable/ic_playlist_icon"
-        app:startIconTint="@color/cool_pink"
+        app:startIconTint="?attr/color"
         android:hint="@string/playlist_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -26,11 +26,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/cool_pink"
+        app:boxStrokeColor="?attr/color"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="10dp"
         app:startIconDrawable="@drawable/ic_playlist_icon"
-        app:startIconTint="@color/cool_pink"
+        app:startIconTint="?attr/color"
         android:hint="@string/your_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText

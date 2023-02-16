@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shevy.audioplayer.databinding.FragmentNowPlayingBinding
 import com.shevy.audioplayer.models.setSongPosition
+import com.shevy.audioplayer.presentation.MainActivity
 import com.shevy.audioplayer.presentation.PlayerActivity
 
 class NowPlaying : Fragment() {
@@ -25,6 +26,7 @@ class NowPlaying : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requireContext().theme.applyStyle(MainActivity.currentThemeNav[MainActivity.themeIndex], true)
         val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
         binding = FragmentNowPlayingBinding.bind(view)
         binding.root.visibility = View.INVISIBLE

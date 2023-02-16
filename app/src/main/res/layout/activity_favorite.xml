@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/cool_pink"
+        android:background="?attr/color"
         android:layout_marginTop="2dp">
 
         <ImageButton
@@ -57,7 +57,7 @@
         android:backgroundTint="@color/white"
         app:icon="@drawable/ic_shuffle_icon"
         app:iconSize="35dp"
-        app:iconTint="@color/cool_pink"
+        app:iconTint="?attr/color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
         app:strokeWidth="2dp"
-        app:strokeColor="@color/cool_pink"/>
+        app:strokeColor="?attr/color"/>
 
     <TextView
         android:id="@+id/instructionFV"

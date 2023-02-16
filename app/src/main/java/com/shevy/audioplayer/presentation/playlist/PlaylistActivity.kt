@@ -11,6 +11,7 @@ import com.shevy.audioplayer.databinding.ActivityPlaylistBinding
 import com.shevy.audioplayer.databinding.AddPlaylistDialogBinding
 import com.shevy.audioplayer.models.MusicPlaylist
 import com.shevy.audioplayer.models.Playlist
+import com.shevy.audioplayer.presentation.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,6 +26,7 @@ class PlaylistActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex])
         binding = ActivityPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

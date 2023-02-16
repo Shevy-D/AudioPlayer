@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:background="@color/cool_pink"
+        android:background="?attr/color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,14 +56,14 @@
         android:backgroundTint="@color/white"
         app:icon="@drawable/ic_add"
         app:iconSize="35dp"
-        app:iconTint="@color/cool_pink"
+        app:iconTint="?attr/color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
-        app:strokeColor="@color/cool_pink"
+        app:strokeColor="?attr/color"
         app:strokeWidth="2dp" />
 
     <TextView
