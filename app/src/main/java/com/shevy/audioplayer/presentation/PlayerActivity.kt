@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.database.Cursor
 import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -12,6 +13,7 @@ import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -56,7 +58,20 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initializeLayout()
+        if (intent.data?.scheme.contentEquals("content")) {
+            val intentService = Intent(this, MusicService::class.java)
+            bindService(intentService, this, BIND_AUTO_CREATE)
+            startService(intentService)
+            musicListPA = ArrayList()
+            musicListPA.add(getMusicDetails(intent.data!!))
+
+            Glide.with(applicationContext)
+                .load(getImgArt(musicListPA[songPosition].path))
+                .apply(RequestOptions().placeholder(R.drawable.splash_screen).centerCrop())
+                .into(binding.songImgPA)
+            binding.songNamePA.text = musicListPA[songPosition].title
+
+        } else initializeLayout()
         binding.backBtnPA.setOnClickListener { finish() }
         binding.playPauseBtnPA.setOnClickListener {
             if (isPlaying) pauseMusic() else playMusic()
@@ -68,7 +83,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     musicService!!.mediaPlayer!!.seekTo(progress)
-                    musicService!!.showNotification(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+                    musicService!!.showNotification(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play, 0F)
                 }
             }
 
@@ -183,7 +198,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicService!!.mediaPlayer!!.start()
             isPlaying = true
             binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
-            musicService!!.showNotification(R.drawable.ic_pause)
+            musicService!!.showNotification(R.drawable.ic_pause, 1F)
             binding.tvSeekBarStart.text =
                 formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
             binding.tvSeekBarEnd.text =
@@ -275,14 +290,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private fun playMusic() {
         binding.playPauseBtnPA.setIconResource(R.drawable.ic_pause)
-        musicService!!.showNotification(R.drawable.ic_pause)
+        musicService!!.showNotification(R.drawable.ic_pause, 1F)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBtnPA.setIconResource(R.drawable.ic_play)
-        musicService!!.showNotification(R.drawable.ic_play)
+        musicService!!.showNotification(R.drawable.ic_play, 0F)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
     }
@@ -305,7 +320,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         createMediaPlayer()
         musicService!!.seekBarSetup()
         musicService!!.audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        musicService!!.audioManager.requestAudioFocus(musicService, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        musicService!!.audioManager.requestAudioFocus(
+            musicService,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
@@ -365,5 +384,35 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }.start()
             dialog.dismiss()
         }
+    }
+
+    @SuppressLint("Recycle")
+    private fun getMusicDetails(contentUri: Uri): Music {
+        var cursor: Cursor? = null
+        try {
+            val projection = arrayOf(MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION)
+            cursor = this.contentResolver.query(contentUri, projection, null, null, null)
+            val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+            cursor!!.moveToFirst()
+            val path = dataColumn?.let { cursor.getString(it) }
+            val duration = durationColumn?.let { cursor.getLong(it) }!!
+            return Music(
+                id = "Unknown",
+                title = path.toString(),
+                album = "Unknown",
+                artist = "Unknown",
+                duration = duration,
+                path = path.toString(),
+                artUri = "Unknown"
+            )
+        } finally {
+            cursor?.close()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
     }
 }
